@@ -1,0 +1,191 @@
+{
+  "consumer": {
+    "name": "splitto-frontend"
+  },
+  "interactions": [
+    {
+      "description": "une requête pour obtenir les balances d'un groupe inexistant",
+      "providerStates": [
+        {
+          "name": "aucun groupe inexistant"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "method": "GET",
+        "path": "/api/groups/inexistant/balances"
+      },
+      "response": {
+        "body": {
+          "error": "Group not found"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.error": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {},
+          "status": {}
+        },
+        "status": 404
+      }
+    },
+    {
+      "description": "une requête pour obtenir les balances du groupe group-1",
+      "providerStates": [
+        {
+          "name": "group-1 a 3 membres et 2 dépenses"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "method": "GET",
+        "path": "/api/groups/group-1/balances"
+      },
+      "response": {
+        "body": {
+          "balances": {
+            "a": 12.5,
+            "b": -2.5,
+            "c": -10
+          },
+          "groupId": "group-1",
+          "settlements": [
+            {
+              "amount": 10,
+              "from": "c",
+              "to": "a"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.balances": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.balances.a": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.balances.b": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.balances.c": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.groupId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.settlements": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.settlements[*].amount": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.settlements[*].from": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.settlements[*].to": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {},
+          "status": {}
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "13.2.0"
+    },
+    "pactRust": {
+      "ffi": "0.4.22",
+      "models": "1.2.3"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "splitto-api"
+  }
+}
