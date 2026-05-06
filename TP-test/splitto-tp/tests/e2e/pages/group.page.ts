@@ -25,17 +25,11 @@ export class GroupPage {
     await dlg.getByLabel('Montant').fill(params.amount);
     await dlg.getByLabel('Payé par').selectOption({ label: params.paidByName });
 
-    // Beneficiaries are checkboxes within labels
+    // Beneficiaries are checkboxes within labels.
+    // We use exact matching to avoid the outer label "Bénéficiaires (cochez)" being
+    // concatenated into some accessible names.
     for (const name of params.beneficiariesNames) {
-      const cb = dlg.getByRole('checkbox', { name });
-      if (!(await cb.isChecked())) await cb.check();
-    }
-
-    // Uncheck anyone not in list by iterating known names (simple for our test inputs)
-    const all = new Set(params.beneficiariesNames);
-    for (const name of [params.paidByName, ...params.beneficiariesNames]) {
-      // just to avoid empty loop in case
-      void name;
+      await dlg.getByRole('checkbox', { name, exact: true }).setChecked(true);
     }
 
     await dlg.getByRole('button', { name: 'Ajouter' }).click();

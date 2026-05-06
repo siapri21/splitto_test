@@ -105,12 +105,17 @@ test('Marquer un règlement comme « réglé » et vérifier qu’il disparaît'
   });
 
   await expect(group.settlementsTable()).toBeVisible();
-  const firstRow = group.settlementsTable().getByRole('row').nth(1); // header is row 0
+  const rows = page.getByTestId(/settlement-row-/);
+  const firstRow = rows.first();
   await expect(firstRow).toBeVisible();
+  const id = await firstRow.getAttribute('data-testid');
+  if (!id) throw new Error('Expected settlement row to have data-testid');
+  const beforeCount = await rows.count();
 
   await group.settleFirst();
 
-  await expect(firstRow).toHaveCount(0);
+  await expect(page.getByTestId(id)).toHaveCount(0);
+  await expect(rows).toHaveCount(beforeCount - 1);
   await expect(group.alert()).toContainText('Règlement marqué comme effectué');
 });
 

@@ -424,7 +424,13 @@
       const benefDiv = $('input-expense-beneficiaries');
       benefDiv.innerHTML = group.members.map(m => `
         <label style="font-weight:normal;flex-direction:row;align-items:center">
-          <input type="checkbox" name="beneficiary" value="${escapeHtml(m.id)}" checked>
+          <input
+            type="checkbox"
+            name="beneficiary"
+            value="${escapeHtml(m.id)}"
+            aria-label="${escapeHtml(m.name)}"
+            checked
+          >
           ${escapeHtml(m.name)}
         </label>
       `).join('');
